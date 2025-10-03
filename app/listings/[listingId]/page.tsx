@@ -4,19 +4,29 @@ import { ListingClient } from "./ListingClient";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { getReservations } from "@/app/actions/getReservations";
 
-interface IParams {
-  listingId: string;
-}
+export default async function Listing(props: any) {
+  // Access params safely
+  const listingId = props.params?.listingId as string;
 
-export default async function Listing({ params }: { params: IParams }) {
-  const listing = await getListingById(params);
-  const reservations = await getReservations(params);
+  if (!listingId) {
+    return <EmptyState />;
+  }
+
+  const listing = await getListingById({ listingId });
+  const reservations = await getReservations({ listingId });
   const currentUser = await getCurrentUser();
 
   if (!listing) {
     return <EmptyState />;
   }
-  return <div className="">
-    <ListingClient listing={listing} reservations={reservations} currentUser={currentUser}/>
-  </div>;
+
+  return (
+    <div className="">
+      <ListingClient
+        listing={listing}
+        reservations={reservations}
+        currentUser={currentUser}
+      />
+    </div>
+  );
 }

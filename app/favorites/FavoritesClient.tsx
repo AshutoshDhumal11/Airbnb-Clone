@@ -1,3 +1,6 @@
+// app/favorites/FavoritesClient.tsx
+'use client';
+
 import { Container } from "../components/Container";
 import { Heading } from "../components/Heading";
 import { ListingCard } from "../components/Listings/ListingCard";

@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
-import { useCallback } from "react";
+import { useCallback, Suspense } from "react";
 import { IconType } from "react-icons";
 
 interface CategoryBoxProps {
@@ -13,7 +13,7 @@ interface CategoryBoxProps {
   selected: boolean;
 }
 
-export function CategoryBox({
+function CategoryBoxContent({
   label,
   icon: Icon,
   selected,
@@ -61,5 +61,18 @@ export function CategoryBox({
       <Icon size={26} />
       <div className="font-medium text-sm">{label}</div>
     </div>
+  );
+}
+
+export function CategoryBox(props: CategoryBoxProps) {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center gap-2 p-3">
+        <div className="w-6 h-6 bg-gray-200 rounded animate-pulse"></div>
+        <div className="w-12 h-4 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+    }>
+      <CategoryBoxContent {...props} />
+    </Suspense>
   );
 }

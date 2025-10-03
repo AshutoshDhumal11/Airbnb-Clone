@@ -18,6 +18,7 @@ import { CategoryBox } from "./CategoryBox";
 import { FaSkiing } from "react-icons/fa";
 import { BsSnow } from "react-icons/bs";
 import { IoDiamond } from "react-icons/io5";
+import { Suspense } from "react";
 
 export const categories = [
   {
@@ -97,12 +98,12 @@ export const categories = [
   },
 ];
 
-export function Categories() {
+function CategoriesContent() {
   const params = useSearchParams();
   const category = params?.get("category");
-
   const pathname = usePathname();
   const isMainPage = pathname === "/";
+
   if (!isMainPage) {
     return null;
   }
@@ -121,5 +122,24 @@ export function Categories() {
         ))}
       </div>
     </Container>
+  );
+}
+
+export function Categories() {
+  return (
+    <Suspense fallback={
+      <Container>
+        <div className="pt-4 flex items-center justify-between overflow-auto">
+          {categories.map((item) => (
+            <div key={item.label} className="flex flex-col items-center justify-center gap-2 p-3">
+              <div className="w-6 h-6 bg-gray-200 rounded animate-pulse"></div>
+              <div className="w-12 h-4 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+          ))}
+        </div>
+      </Container>
+    }>
+      <CategoriesContent />
+    </Suspense>
   );
 }

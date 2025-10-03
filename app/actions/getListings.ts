@@ -13,7 +13,8 @@ export interface IListingsParams {
 
 export async function getListings(params: IListingsParams) {
     try {
-        const { userId, guestCount, roomCount, bathroomCount, startDate, endDate, locationValue, category } = await params;
+        // REMOVE THE AWAIT - params is not a Promise
+        const { userId, guestCount, roomCount, bathroomCount, startDate, endDate, locationValue, category } = params;
 
         let query: any = {};
 

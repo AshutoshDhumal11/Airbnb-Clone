@@ -4,10 +4,11 @@ import { useCountries } from "@/app/hooks/useCountries";
 import { useSearchModal } from "@/app/hooks/useSearchModal";
 import { differenceInCalendarDays } from "date-fns";
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, Suspense } from "react";
 import { BiSearch } from "react-icons/bi";
 
-export function Search() {
+// Move the content that uses useSearchParams to a separate component
+function SearchContent() {
   const searchModal = useSearchModal();
   const params = useSearchParams();
   const { getByValue } = useCountries();
@@ -21,7 +22,6 @@ export function Search() {
     if (locationValue) {
       return getByValue(locationValue as string)?.label;
     }
-
     return "Anywhere";
   }, [getByValue, locationValue]);
 
@@ -37,7 +37,6 @@ export function Search() {
 
       return `${diff} Days`;
     }
-
     return "Any Week";
   }, [startDate, endDate]);
 
@@ -45,6 +44,7 @@ export function Search() {
     if (guestCount) {
       return `${guestCount} Guests`;
     }
+    return "Add Guests";
   }, [guestCount]);
 
   return (
@@ -54,11 +54,9 @@ export function Search() {
     >
       <div className="flex justify-center items-center">
         <div className="text-sm font-semibold px-6">{locationLabel}</div>
-
         <div className="hidden sm:block font-semibold px-6 border-x-[1px] flex-1 text-center">
           {durationLabel}
         </div>
-
         <div className="text-sm pl-6 pr-2 text-gray-600 flex items-center gap-3">
           <div className="hidden sm:block">{guestLabel}</div>
           <div className="p-2 bg-rose-500 text-white rounded-full">
@@ -67,5 +65,28 @@ export function Search() {
         </div>
       </div>
     </div>
+  );
+}
+
+export function Search() {
+  return (
+    <Suspense fallback={
+      <div className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm">
+        <div className="flex justify-center items-center">
+          <div className="text-sm font-semibold px-6">Loading...</div>
+          <div className="hidden sm:block font-semibold px-6 border-x-[1px] flex-1 text-center">
+            Loading...
+          </div>
+          <div className="text-sm pl-6 pr-2 text-gray-600 flex items-center gap-3">
+            <div className="hidden sm:block">Loading...</div>
+            <div className="p-2 bg-rose-500 text-white rounded-full">
+              <BiSearch size={18} />
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
   );
 }

@@ -3,7 +3,7 @@ import { getFavoriteListing } from "../actions/getFavoriteListings";
 import { EmptyState } from "../components/EmptyState";
 import { FavoritesClient } from "./FavoritesClient";
 
-export default async function Favorites () {
+export default async function Favorites() {
   const listings = await getFavoriteListing();
   const currentUser = await getCurrentUser();
 
@@ -15,5 +15,7 @@ export default async function Favorites () {
       />
     );
   }
+
+  // FavoritesClient is a client component
   return <FavoritesClient listings={listings} currentUser={currentUser} />;
 }

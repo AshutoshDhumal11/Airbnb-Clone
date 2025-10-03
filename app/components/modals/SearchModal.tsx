@@ -3,7 +3,7 @@
 import { useSearchModal } from "@/app/hooks/useSearchModal";
 import { Modal } from "./Modal";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, Suspense } from "react";
 import { Range } from "react-date-range";
 import dynamic from "next/dynamic";
 import { CountrySelect, CountrySelectValue } from "../inputs/CountrySelect";
@@ -19,7 +19,7 @@ enum STEPS {
   INFO = 2,
 }
 
-export function SearchModal() {
+function SearchModalContent() {
   const router = useRouter();
   const params = useSearchParams();
   const searchModal = useSearchModal();
@@ -39,6 +39,7 @@ export function SearchModal() {
     () =>
       dynamic(() => import("../Map").then((mod) => mod.Map), {
         ssr: false,
+        loading: () => <div className="h-[35vh] rounded-lg bg-gray-200 animate-pulse"></div>,
       }),
     [location]
   );
@@ -183,5 +184,13 @@ export function SearchModal() {
       secondaryAction={() => (step === STEPS.LOCATION ? undefined : onBack())}
       body={bodyContent}
     />
+  );
+}
+
+export function SearchModal() {
+  return (
+    <Suspense fallback={null}>
+      <SearchModalContent />
+    </Suspense>
   );
 }
