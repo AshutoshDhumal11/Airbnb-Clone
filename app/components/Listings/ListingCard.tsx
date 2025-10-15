@@ -76,7 +76,7 @@ export function ListingCard({
             fill
             alt="Listing"
             src={data.imageSrc}
-            className="object-cover h-full w-full group-hover:scale-110 transition"
+            className="object-cover -z-10 h-full w-full group-hover:scale-110 transition"
           />
           <div className="absolute top-3 right-3">
             <HeartButton listingId={data.id} currentUser={currentUser} />
